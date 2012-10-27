@@ -1,4 +1,23 @@
-[[ -s "$HOME/.ppprofile/git" ]] && source "$HOME/.ppprofile/git"
+####################### Configurable #######################
+
+_DEBUG="on" # on: display debug messages; all other values: do not display debug messages
+
+BASE_DIR=$HOME
+PROJECT_NAME=".ppprofile"
+
+######## Modify ONLY IF you know what you are doing ########
+
+DEBUG() {
+  [ "$_DEBUG" == "on" ] && $@
+}
+
+import_source() {
+  cmd="$BASE_DIR/$PROJECT_NAME/$1"
+  DEBUG echo "importing $cmd"
+  [[ -s $cmd ]] && source $cmd
+}
+
+import_source "git"
 
 # Change the command line format and color
 # \u User name
