@@ -7,16 +7,13 @@ PROJECT_NAME=".ppprofile"
 
 ######## Modify ONLY IF you know what you are doing ########
 
-DEBUG() {
-  [ "$_DEBUG" == "on" ] && $@
-}
-
 import_source() {
   cmd="$BASE_DIR/$PROJECT_NAME/$1"
   DEBUG echo "importing $cmd"
   [[ -s $cmd ]] && source $cmd
 }
 
+import_source "debug"
 import_source "git"
 
 # Change the command line format and color
