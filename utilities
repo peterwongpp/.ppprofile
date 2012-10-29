@@ -1,0 +1,51 @@
+# usage:
+#   pp_import_source "source_name"
+#   checks if $PP_BASE_DIR/source_name file exist, if so, source it
+pp_import_source() {
+  cmd="$PP_BASE_DIR/$1"
+  [[ -s $cmd ]] && source $cmd
+}
+
+PP_COLOR_RESET="\033[0m"
+
+PP_COLOR_BOLD="\033[1m"
+PP_COLOR_UNDERLINE="\033[4m"
+
+PP_COLOR_BLACK="\033[30m"
+PP_COLOR_RED="\033[31m"
+PP_COLOR_GREEN="\033[32m"
+PP_COLOR_YELLOW="\033[33m"
+PP_COLOR_BLUE="\033[34m"
+PP_COLOR_MAGENTA="\033[35m"
+PP_COLOR_CYAN="\033[36m"
+PP_COLOR_WHITE="\033[37m"
+
+PP_COLOR_BG_BLACK="\033[40m"
+PP_COLOR_BG_RED="\033[41m"
+PP_COLOR_BG_GREEN="\033[42m"
+PP_COLOR_BG_YELLOW="\033[43m"
+PP_COLOR_BG_BLUE="\033[44m"
+PP_COLOR_BG_MAGENTA="\033[45m"
+PP_COLOR_BG_CYAN="\033[46m"
+PP_COLOR_BG_WHITE="\033[47m"
+
+pp_color_test() {
+  echo -e $PP_COLOR_RESET"----- COLOR TEST -----"
+  pp_color_test_row "BLACK"
+  pp_color_test_row "RED"
+  pp_color_test_row "GREEN"
+  pp_color_test_row "YELLOW"
+  pp_color_test_row "BLUE"
+  pp_color_test_row "MAGENTA"
+  pp_color_test_row "CYAN"
+  pp_color_test_row "WHITE"
+  echo -e $PP_COLOR_RESET
+}
+pp_color_test_row() {
+  color_name=$1
+  color=PP_COLOR_$color_name
+
+  echo -en $PP_COLOR_RESET
+  echo -en ${!color}"$color_name\t" $PP_COLOR_RESET${!color}$PP_COLOR_BOLD"BOLD\t" $PP_COLOR_RESET${!color}$PP_COLOR_UNDERLINE"UNDERLINE"
+  echo -e $PP_COLOR_RESET
+}

@@ -1,40 +1,61 @@
-# A function to return the current git branch name
-parse_git_branch_name() {
-  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
-}
-
-# A function to return the current formatted git branch name
-parse_git_branch_formatted() {
-  branch_name=$(parse_git_branch_name)
-
-  if [ "$branch_name" ]; then
-    echo " → $branch_name"
-  fi
-}
-# -
-
-# A function to return the string of state of the branch and the number of stashes
-parse_git_dirty() {
-  D="$(git status 2> /dev/null | tail -n1 | awk '{ print $1 }' )"
-  if [ "$D" = "nothing" ] ; then
-    echo -en " (clean) "
-  elif [ "$D" = "no" ]; then
-    echo -en " (modified) "
-  elif [ "$D" = "#" ]; then
-    echo -en " (staged) "
+pp_git_dir() {
+  if [ -d .git ]; then
+    echo "$PWD/.git"
   else
-    echo " "
+    git rev-parse --git-dir 2> /dev/null;
   fi
+}
 
-  if [ "$D" != "" ] ; then
-    D2="$(git stash list 2> /dev/null | wc -l | awk '{ print $1 }' )"
-    if [ "$D2" = "0" ] ; then
-      echo ""
-    elif [ "$D2" = "1" ] ; then
-      echo -en "($D2 stash) "
+pp_git_branch() {
+  if [ "$(pp_git_dir)" != "" ]; then
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+  fi
+}
+
+pp_git_status() {
+  if [ "$(pp_git_dir)" != "" ]; then
+    D="$(git status 2> /dev/null | tail -n1 | awk '{ print $1 }' )"
+
+    if [ $D = "nothing" ]; then
+      echo -n "clean"
+    elif [ $D = "no" ]; then
+      echo -n "modified"
+    elif [ $D = "#" ]; then
+      echo -n "staged"
     else
-      echo -en "($D2 stashes) "
+      echo -n ""
     fi
   fi
 }
-# -
+
+pp_git_stash_status() {
+  if [ "$(pp_git_dir)" != "" ]; then
+    D="$(git stash list 2> /dev/null | wc -l | awk '{ print $1 }' )"
+
+    if [ "$D" = "0" ]; then
+      echo -n ""
+    else
+      echo -n $D
+    fi
+  fi
+}
+
+pp_git_for_ps1() {
+  if [ "$(pp_git_dir)" != "" ];then
+    echo -en $PP_COLOR_RESET$PP_COLOR_YELLOW" → $(pp_git_branch)"
+
+    status=$(pp_git_status)
+    if [ "$status" != "" ]; then
+      echo -en $PP_COLOR_RESET$PP_COLOR_CYAN" ($status)"
+    fi
+
+    stash=$(pp_git_stash_status)
+    if [ "$stash" != "" ]; then
+      if [ "$stash" == "1" ]; then
+        echo -en $PP_COLOR_RESET$PP_COLOR_CYAN" ($stash stash)"
+      else
+        echo -en $PP_COLOR_RESET$PP_COLOR_CYAN" ($stash stashes)"
+      fi
+    fi
+  fi
+}
