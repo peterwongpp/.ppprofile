@@ -39,23 +39,3 @@ pp_git_stash_status() {
     fi
   fi
 }
-
-pp_git_for_ps1() {
-  if [ "$(pp_git_dir)" != "" ];then
-    echo -en $PP_COLOR_RESET$PP_COLOR_YELLOW" → $(pp_git_branch)"
-
-    status=$(pp_git_status)
-    if [ "$status" != "" ]; then
-      echo -en $PP_COLOR_RESET$PP_COLOR_CYAN" ($status)"
-    fi
-
-    stash=$(pp_git_stash_status)
-    if [ "$stash" != "" ]; then
-      if [ "$stash" == "1" ]; then
-        echo -en $PP_COLOR_RESET$PP_COLOR_CYAN" ($stash stash)"
-      else
-        echo -en $PP_COLOR_RESET$PP_COLOR_CYAN" ($stash stashes)"
-      fi
-    fi
-  fi
-}
