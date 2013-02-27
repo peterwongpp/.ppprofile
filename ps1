@@ -5,7 +5,7 @@
 # \h Host name
 # \w Directory
 # $(parse_git_branch) Current git branch name
-export PS1='\[\033[1;33m\]\W\[\033[0;33m\]$(pp_git_formatted_branch)\[\033[0;36m\]$(pp_git_formatted_status)$(pp_git_formatted_stash)\[\033[1;33m\] > \[\033[0m\]'
+export PS1='\[\033[1;33m\]\W\[\033[0;33m\] [$(rvm-prompt)]$(pp_git_formatted_branch)\[\033[0;36m\]$(pp_git_formatted_status)$(pp_git_formatted_stash)\[\033[1;33m\] > \[\033[0m\]\n'
 
 # depends on git
 
