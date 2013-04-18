@@ -49,3 +49,38 @@ pp_color_test_row() {
   echo -en ${!color}"$color_name\t" $PP_COLOR_RESET${!color}$PP_COLOR_BOLD"BOLD\t" $PP_COLOR_RESET${!color}$PP_COLOR_UNDERLINE"UNDERLINE"
   echo -e $PP_COLOR_RESET
 }
+
+pp_filesize() {
+  find . -type f -exec ls -l {} \; | awk '{sum += $5} END {print sum}'
+}
+
+pp_filesize_str() {
+  SUM=$(pp_filesize)
+  KB=$((1000))
+  MB=$(($KB*1000))
+  GB=$(($MB*1000))
+
+  if [[ $SUM -lt $KB ]]; then
+    RESULT=$SUM
+    UNIT="bytes"
+  elif [[ $SUM -lt $MB ]]; then
+    RESULT=`echo "scale=2; $SUM / $KB" | bc`
+    UNIT="KB"
+  elif [[ $SUM -lt $GB ]]; then
+    RESULT=`echo "scale=2; $SUM / $MB" | bc`
+    UNIT="MB"
+  else
+    RESULT=`echo "scale=2; $SUM / $GB" | bc`
+    UNIT="GB"
+  fi
+
+  echo "$RESULT $UNIT"
+
+  # if [$SUM < 1024]; then
+  #   echo "$SUM bytes"
+  # elif [$SUM < $((1024*1024))]; then
+  #     echo $SUM/$((1024*1024)) KB
+  # elif [$SUM < $((1024*1024*1024))]; then
+  #     echo $SUM/$((1024*1024*1024)) MB
+  # fi
+}
