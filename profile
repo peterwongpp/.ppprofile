@@ -11,3 +11,4 @@ CUSTOMIZED_PS1="YES" # YES - use; any other values - do not use
 pp_import_source "utilities"
 pp_import_source "git"
 pp_import_source "ps1"
+pp_import_source "shortcuts"

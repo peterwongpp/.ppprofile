@@ -1,0 +1,9 @@
+# usage:
+#   fxml '<xml>...</xml>'
+# output:
+#   <xml>
+#     ...
+#   </xml>
+fxml() {
+  echo $1 | xmllint --format -
+}
