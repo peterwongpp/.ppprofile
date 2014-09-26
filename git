@@ -16,11 +16,11 @@ pp_git_status() {
   if [ "$(pp_git_dir)" != "" ]; then
     D="$(git status 2> /dev/null | tail -n1 | awk '{ print $1 }' )"
 
-    if [ $D = "nothing" ]; then
+    if [ "$D" = "nothing" ]; then
       echo -n "clean"
-    elif [ $D = "no" ]; then
+    elif [ "$D" = "no" ]; then
       echo -n "modified"
-    elif [ $D = "#" ]; then
+    elif [ "$D" = "#" ]; then
       echo -n "staged"
     else
       echo -n ""
@@ -35,7 +35,7 @@ pp_git_stash_status() {
     if [ "$D" = "0" ]; then
       echo -n ""
     else
-      echo -n $D
+      echo -n "$D"
     fi
   fi
 }
