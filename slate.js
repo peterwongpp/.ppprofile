@@ -6,276 +6,348 @@ slate.configAll({
 
 var mainScreen    = "1440x900";
 var tvbSeatScreen = "1680x1050";
-var screenOf = function(screenName) {
-  if (screenName == "main") {
-    return mainScreen;
-  } else if (screenName == "tvbSeatScreen") {
-    return tvbSeatScreen;
-  }
+var screens = {
+  "mainScreen": mainScreen,
+  "tvbSeatScreen": tvbSeatScreen
+};
 
-  return mainScreen;
+// expects lyric to be put in the left of main screen.
+var lyricOverlay = { // actual lyric: (0, 46, 360, screenSizeY - 46)
+  "x": "screenOriginX",
+  "y": "screenOriginY",
+  "width": 294,
+  "height": "screenSizeY"
 }
 
-var lyricDisplay = {
-  "x": "(screenSizeX - 280)",
-  "y": 46,
-  "width": 360,
-  "height": "(screenSizeY - 46)"
+var gridConfigs = {};
+for (var screenName in screens) {
+  gridConfigs[screens[screenName]] = { "width": 6, "height": 6 };
 }
-
-var gridsParams = {};
-var grids = { "width": 6, "height": 6 };
-gridsParams[mainScreen] = grids;
-gridsParams[tvbSeatScreen] = grids;
 var gridOperation = slate.operation("grid", {
-  "grids": gridsParams,
+  "grids": gridConfigs,
   "padding": 5
 });
 
-var fullScreenOperation = slate.operation("corner", {
-  "direction": "top-left",
-  "width": "screenSizeX",
-  "height": "screenSizeY",
-  "screen": screenOf("main")
+var mainScreenLyricOverlayOperation = slate.operation("move", {
+  "x": lyricOverlay["x"],
+  "y": lyricOverlay["y"],
+  "width": lyricOverlay["width"],
+  "height": lyricOverlay["height"],
+  "screen": screens["mainScreen"]
 });
 
-var fullScreenLeftOperation = slate.operation("corner", {
-  "direction": "top-left",
-  "width": "screenSizeX / 2",
-  "height": "screenSizeY",
-  "screen": screenOf("main")
-});
-var fullScreenRightOperation = slate.operation("corner", {
-  "direction": "top-right",
-  "width": "screenSizeX / 2",
-  "height": "screenSizeY",
-  "screen": screenOf("main")
-});
-var fullScreenTopOperation = slate.operation("corner", {
-  "direction": "top-left",
-  "width": "screenSizeX",
-  "height": "screenSizeY / 2",
-  "screen": screenOf("main")
-});
-var fullScreenBottomOperation = slate.operation("corner", {
-  "direction": "bottom-left",
-  "width": "screenSizeX",
-  "height": "screenSizeY / 2",
-  "screen": screenOf("main")
-});
-var fullScreenTopLeftOperation = slate.operation("corner", {
-  "direction": "top-left",
-  "width": "screenSizeX / 2",
-  "height": "screenSizeY / 2",
-  "screen": screenOf("main")
-});
-var fullScreenTopRightOperation = slate.operation("corner", {
-  "direction": "top-right",
-  "width": "screenSizeX / 2",
-  "height": "screenSizeY / 2",
-  "screen": screenOf("main")
-});
-var fullScreenBottomLeftOperation = slate.operation("corner", {
-  "direction": "bottom-left",
-  "width": "screenSizeX / 2",
-  "height": "screenSizeY / 2",
-  "screen": screenOf("main")
-});
-var fullScreenBottomRightOperation = slate.operation("corner", {
-  "direction": "bottom-right",
-  "width": "screenSizeX / 2",
-  "height": "screenSizeY / 2",
-  "screen": screenOf("main")
+var mainScreenOriginX = "(" + lyricOverlay["x"] + "+" + lyricOverlay["width"] + ")";
+var mainScreenOriginY = "(" + lyricOverlay["y"] + ")";
+var mainScreenSizeX = "(screenSizeX-" + lyricOverlay["x"] + "-" + lyricOverlay["width"] + ")";
+var mainScreenSizeY = "screenSizeY";
+
+var mainScreenTopLeftOperation = slate.operation("move", {
+  "x": mainScreenOriginX,
+  "y": mainScreenOriginY,
+  "width": mainScreenSizeX + "/2",
+  "height": mainScreenSizeY + "/2",
+  "screen": screens["mainScreen"]
 });
 
-var lyricDisplayOriginX       = "screenOriginX";
-var lyricDisplayOriginXMiddle = "(" + lyricDisplayOriginX + ") + ((screenSizeX - " + lyricDisplay["width"] + " ) / 2)";
-var lyricDisplayOriginY       = "screenOriginY";
-var lyricDisplayOriginYMiddle = "(" + lyricDisplayOriginY + ") + (screenSizeY / 2)";
-var lyricDisplaySizeX     = "screenSizeX - " + lyricDisplay["width"];
-var lyricDisplaySizeXHalf = "(" + lyricDisplaySizeX + ") / 2";
-var lyricDisplaySizeY     = "screenSizeY";
-var lyricDisplaySizeYHalf = lyricDisplaySizeY + " / 2";
-
-var lyricDisplayFullScreenOperation = slate.operation("move", {
-  "x": lyricDisplayOriginX,
-  "y": lyricDisplayOriginY,
-  "width": lyricDisplaySizeX,
-  "height": lyricDisplaySizeY,
-  "screen": screenOf("tvbSeatScreen")
+var mainScreenTopOperation = slate.operation("move", {
+  "x": mainScreenOriginX,
+  "y": mainScreenOriginY,
+  "width": mainScreenSizeX,
+  "height": mainScreenSizeY + "/2",
+  "screen": screens["mainScreen"]
 });
 
-var lyricDisplayLyricOverlapOperation = slate.operation("move", {
-  "x": "screenOriginX + " + lyricDisplaySizeX,
+var mainScreenTopRightOperation = slate.operation("move", {
+  "x": mainScreenOriginX + " + (" + mainScreenSizeX + "/2)",
+  "y": mainScreenOriginY,
+  "width": mainScreenSizeX + "/2",
+  "height": mainScreenSizeY + "/2",
+  "screen": screens["mainScreen"]
+});
+
+var mainScreenLeftOperation = slate.operation("move", {
+  "x": mainScreenOriginX,
+  "y": mainScreenOriginY,
+  "width": mainScreenSizeX + "/2",
+  "height": mainScreenSizeY,
+  "screen": screens["mainScreen"]
+});
+
+var mainScreenOperation = slate.operation("move", {
+  "x": mainScreenOriginX,
+  "y": mainScreenOriginY,
+  "width": mainScreenSizeX,
+  "height": mainScreenSizeY,
+  "screen": screens["mainScreen"]
+});
+
+var mainScreenRightOperation = slate.operation("move", {
+  "x": mainScreenOriginX + " + (" + mainScreenSizeX + "/2)",
+  "y": mainScreenOriginY,
+  "width": mainScreenSizeX + "/2",
+  "height": mainScreenSizeY,
+  "screen": screens["mainScreen"]
+});
+
+var mainScreenBottomLeftOperation = slate.operation("move", {
+  "x": mainScreenOriginX,
+  "y": mainScreenOriginY + " + (" + mainScreenSizeY + "/2)",
+  "width": mainScreenSizeX + "/2",
+  "height": mainScreenSizeY + "/2",
+  "screen": screens["mainScreen"]
+});
+
+var mainScreenBottomOperation = slate.operation("move", {
+  "x": mainScreenOriginX,
+  "y": mainScreenOriginY + " + (" + mainScreenSizeY + "/2)",
+  "width": mainScreenSizeX,
+  "height": mainScreenSizeY + "/2",
+  "screen": screens["mainScreen"]
+});
+
+var mainScreenBottomRightOperation = slate.operation("move", {
+  "x": mainScreenOriginX + " + (" + mainScreenSizeX + "/2)",
+  "y": mainScreenOriginY + " + (" + mainScreenSizeY + "/2)",
+  "width": mainScreenSizeX + "/2",
+  "height": mainScreenSizeY + "/2",
+  "screen": screens["mainScreen"]
+});
+
+var tvbSeatScreenTopLeftOperation = slate.operation("move", {
+  "x": "screenOriginX",
   "y": "screenOriginY",
-  "width": lyricDisplay["width"],
+  "width": "screenSizeX / 2",
+  "height": "screenSizeY / 2",
+  "screen": screens["tvbSeatScreen"]
+});
+
+var tvbSeatScreenTopOperation = slate.operation("move", {
+  "x": "screenOriginX",
+  "y": "screenOriginY",
+  "width": "screenSizeX",
+  "height": "screenSizeY / 2",
+  "screen": screens["tvbSeatScreen"]
+});
+
+var tvbSeatScreenTopRightOperation = slate.operation("move", {
+  "x": "screenOriginX + (screenSizeX/2)",
+  "y": "screenOriginY",
+  "width": "screenSizeX / 2",
+  "height": "screenSizeY / 2",
+  "screen": screens["tvbSeatScreen"]
+});
+
+var tvbSeatScreenLeftOperation = slate.operation("move", {
+  "x": "screenOriginX",
+  "y": "screenOriginY",
+  "width": "screenSizeX / 2",
   "height": "screenSizeY",
-  "screen": screenOf("tvbSeatScreen")
+  "screen": screens["tvbSeatScreen"]
 });
 
-var lyricDisplayLeftOperation = slate.operation("move", {
-  "x": lyricDisplayOriginX,
-  "y": lyricDisplayOriginY,
-  "width": lyricDisplaySizeXHalf,
-  "height": lyricDisplaySizeY,
-  "screen": screenOf("tvbSeatScreen")
-});
-var lyricDisplayRightOperation = slate.operation("move", {
-  "x": lyricDisplayOriginXMiddle,
-  "y": lyricDisplayOriginY,
-  "width": lyricDisplaySizeXHalf,
-  "height": lyricDisplaySizeY,
-  "screen": screenOf("tvbSeatScreen")
-});
-var lyricDisplayTopOperation = slate.operation("move", {
-  "x": lyricDisplayOriginX,
-  "y": lyricDisplayOriginY,
-  "width": lyricDisplaySizeX,
-  "height": lyricDisplaySizeYHalf,
-  "screen": screenOf("tvbSeatScreen")
-});
-var lyricDisplayBottomOperation = slate.operation("move", {
-  "x": lyricDisplayOriginX,
-  "y": lyricDisplayOriginYMiddle,
-  "width": lyricDisplaySizeX,
-  "height": lyricDisplaySizeYHalf,
-  "screen": screenOf("tvbSeatScreen")
-});
-var lyricDisplayTopLeftOperation = slate.operation("move", {
-  "x": lyricDisplayOriginX,
-  "y": lyricDisplayOriginY,
-  "width": lyricDisplaySizeXHalf,
-  "height": lyricDisplaySizeYHalf,
-  "screen": screenOf("tvbSeatScreen")
-});
-var lyricDisplayTopRightOperation = slate.operation("move", {
-  "x": lyricDisplayOriginXMiddle,
-  "y": lyricDisplayOriginY,
-  "width": lyricDisplaySizeXHalf,
-  "height": lyricDisplaySizeYHalf,
-  "screen": screenOf("tvbSeatScreen")
-});
-var lyricDisplayBottomLeftOperation = slate.operation("move", {
-  "x": lyricDisplayOriginX,
-  "y": lyricDisplayOriginYMiddle,
-  "width": lyricDisplaySizeXHalf,
-  "height": lyricDisplaySizeYHalf,
-  "screen": screenOf("tvbSeatScreen")
-});
-var lyricDisplayBottomRightOperation = slate.operation("move", {
-  "x": lyricDisplayOriginXMiddle,
-  "y": lyricDisplayOriginYMiddle,
-  "width": lyricDisplaySizeXHalf,
-  "height": lyricDisplaySizeYHalf,
-  "screen": screenOf("tvbSeatScreen")
+var tvbSeatScreenOperation = slate.operation("move", {
+  "x": "screenOriginX",
+  "y": "screenOriginY",
+  "width": "screenSizeX",
+  "height": "screenSizeY",
+  "screen": screens["tvbSeatScreen"]
 });
 
-var mainScreenLayout = slate.layout("mainScreenLayout", {
+var tvbSeatScreenRightOperation = slate.operation("move", {
+  "x": "screenOriginX + (screenSizeX/2)",
+  "y": "screenOriginY",
+  "width": "screenSizeX / 2",
+  "height": "screenSizeY",
+  "screen": screens["tvbSeatScreen"]
+});
+
+var tvbSeatScreenBottomLeftOperation = slate.operation("move", {
+  "x": "screenOriginX",
+  "y": "screenOriginY + (screenSizeY/2)",
+  "width": "screenSizeX / 2",
+  "height": "screenSizeY / 2",
+  "screen": screens["tvbSeatScreen"]
+});
+
+var tvbSeatScreenBottomOperation = slate.operation("move", {
+  "x": "screenOriginX",
+  "y": "screenOriginY + (screenSizeY/2)",
+  "width": "screenSizeX",
+  "height": "screenSizeY / 2",
+  "screen": screens["tvbSeatScreen"]
+});
+
+var tvbSeatScreenBottomRightOperation = slate.operation("move", {
+  "x": "screenOriginX + (screenSizeX/2)",
+  "y": "screenOriginY + (screenSizeY/2)",
+  "width": "screenSizeX / 2",
+  "height": "screenSizeY / 2",
+  "screen": screens["tvbSeatScreen"]
+});
+
+var appConfigurations = {
   "Terminal": {
-    "operations": [fullScreenTopRightOperation],
-    "repeat": true
+    "common": {
+      "operations": [
+        slate.operation("move", {
+          "x": "screenOriginX + screenSizeX / 2",
+          "y": "screenOriginY",
+          "width": "screenSizeX / 2",
+          "height": "screenSizeY / 2",
+          "screen": screens["mainScreen"]
+        })
+      ],
+      "repeat": true
+    }
   },
   "Google Chrome": {
-    "operations": [fullScreenOperation],
-    "repeat": true
+    "common": {
+      "operations": [mainScreenOperation],
+      "repeat": true
+    }
+  },
+  "Safari": {
+    "common": {
+      "operations": [mainScreenOperation],
+      "repeat": true
+    }
   },
   "Sublime Text": {
-    "operations": [fullScreenOperation],
-    "repeat": true
+    "common": {
+      "repeat": true
+    },
+    "mainScreen": {
+      "operations": [mainScreenOperation]
+    },
+    "tvbSeatScreen": {
+      "operations": [tvbSeatScreenOperation]
+    }
   },
   "iTunes": {
-    "operations": [fullScreenOperation],
-    "repeat": true,
-    "title-order": ["iTunes", "MiniPlayer"]
+    "common": {
+      "operations": [
+        function(windowObject) {
+          var title = windowObject.title();
+          switch (title) {
+            case "iTunes":
+              windowObject.doOperation(mainScreenOperation);
+              break;
+            case "MiniPlayer":
+              windowObject.doOperation(mainScreenLyricOverlayOperation);
+              break;
+          };
+        }
+      ],
+      "repeat": true,
+      "ignore-fail": true,
+      "title-order": ["iTunes", "MiniPlayer"]
+    }
   },
   "SourceTree": {
-    "operations": [fullScreenOperation],
-    "repeat": true
-  },
-  "Xcode": {
-    "operations": [fullScreenOperation]
-  },
-  "Calendar": {
-    "operations": [fullScreenOperation]
-  },
-  "Evernote": {
-    "operations": [fullScreenOperation]
-  }
-});
-var mainScreenLayoutOperation = slate.operation("layout", { "name": mainScreenLayout })
-
-var tvbSeatLayout = slate.layout("tvbSeatLayout", {
-  "Terminal": {
-    "operations": [fullScreenTopRightOperation],
-    "repeat": true
-  },
-  "Google Chrome": {
-    "operations": [fullScreenOperation],
-    "repeat": true,
-  },
-  "Sublime Text": {
-    "operations": [lyricDisplayFullScreenOperation],
-    "repeat": true
-  },
-  "iTunes": {
-    "operations": [
-      function(windowObject) {
-        var title = windowObject.title();
-        switch (title) {
-          case "iTunes":
-            windowObject.doOperation(fullScreenOperation);
-            break;
-          case "MiniPlayer":
-            windowObject.doOperation(lyricDisplayLyricOverlapOperation);
-            break;
-        };
-      }
-    ],
-    "ignore-fail": true,
-    "repeat": true
-  },
-  "SourceTree": {
-    "operations": [lyricDisplayFullScreenOperation],
-    "repeat": true
-  },
-  "Xcode": {
-    "operations": [lyricDisplayFullScreenOperation]
+    "common": {
+      "repeat": true
+    },
+    "mainScreen": {
+      "operations": [mainScreenOperation]
+    },
+    "tvbSeatScreen": {
+      "operations": [tvbSeatScreenOperation]
+    }
   },
   "Calendar": {
-    "operations": [lyricDisplayFullScreenOperation]
+    "mainScreen": {
+      "operations": [mainScreenOperation]
+    },
+    "tvbSeatScreen": {
+      "operations": [tvbSeatScreenOperation]
+    }
   },
-  "Evernote": {
-    "operations": [fullScreenOperation]
+  "Mail": {
+    "mainScreen": {
+      "operations": [mainScreenOperation]
+    },
+    "tvbSeatScreen": {
+      "operations": [tvbSeatScreenOperation]
+    }
+  },
+  "ChitChat": {
+    "common": {
+      "repeat": true
+    },
+    "mainScreen": {
+      "operations": [mainScreenOperation]
+    },
+    "tvbSeatScreen": {
+      "operations": [tvbSeatScreenOperation]
+    }
+  },
+  "Line": { // seems not working...
+    "common": {
+      "repeat": true
+    },
+    "mainScreen": {
+      "operations": [mainScreenOperation]
+    },
+    "tvbSeatScreen": {
+      "operations": [tvbSeatScreenOperation]
+    }
+  },
+  "Xcode": {
+    "common": {
+      "repeat": true
+    },
+    "mainScreen": {
+      "operations": [mainScreenOperation]
+    },
+    "tvbSeatScreen": {
+      "operations": [tvbSeatScreenOperation]
+    }
   }
-});
-var tvbSeatLayoutOperation = slate.operation("layout", { "name": tvbSeatLayout });
+};
 
+var screensConfigs = {};
+for (var screenName in screens) {
+  screensConfigs[screenName] = {};
+}
+for (var appName in appConfigurations) {
+  var common = appConfigurations[appName]["common"] || {};
+  for (var screenName in screens) {
+    var screenConfig = _.extend({}, common, appConfigurations[appName][screenName] || {});
+    screensConfigs[screenName][appName] = screenConfig;
+  }
+}
+
+var mainScreenLayout = slate.layout("mainScreenLayout", screensConfigs["mainScreen"]);
+var mainScreenLayoutOperation = slate.operation("layout", { "name": mainScreenLayout });
 slate.default([mainScreen], mainScreenLayout);
-slate.default([mainScreen, tvbSeatScreen], tvbSeatLayout);
+
+var tvbSeatScreenLayout = slate.layout("tvbSeatScreenLayout", screensConfigs["tvbSeatScreen"]);
+var tvbSeatScreenLayoutOperation = slate.operation("layout", { "name": tvbSeatScreenLayout });
+slate.default([mainScreen, tvbSeatScreen], tvbSeatScreenLayout);
 
 slate.bindAll({
   "r:alt": gridOperation,
 
+  "q:alt,shift": mainScreenTopLeftOperation,
+  "w:alt,shift": mainScreenTopOperation,
+  "e:alt,shift": mainScreenTopRightOperation,
+  "a:alt,shift": mainScreenLeftOperation,
+  "s:alt,shift": mainScreenOperation,
+  "d:alt,shift": mainScreenRightOperation,
+  "z:alt,shift": mainScreenBottomLeftOperation,
+  "x:alt,shift": mainScreenBottomOperation,
+  "c:alt,shift": mainScreenBottomRightOperation,
+
+  "q:alt,cmd,shift": tvbSeatScreenTopLeftOperation,
+  "w:alt,cmd,shift": tvbSeatScreenTopOperation,
+  "e:alt,cmd,shift": tvbSeatScreenTopRightOperation,
+  "a:alt,cmd,shift": tvbSeatScreenLeftOperation,
+  "s:alt,cmd,shift": tvbSeatScreenOperation,
+  "d:alt,cmd,shift": tvbSeatScreenRightOperation,
+  "z:alt,cmd,shift": tvbSeatScreenBottomLeftOperation,
+  "x:alt,cmd,shift": tvbSeatScreenBottomOperation,
+  "c:alt,cmd,shift": tvbSeatScreenBottomRightOperation,
+
   "1:alt,shift": mainScreenLayoutOperation,
-  "2:alt,shift": tvbSeatLayoutOperation,
-
-  "q:alt,shift": fullScreenTopLeftOperation,
-  "w:alt,shift": fullScreenTopOperation,
-  "e:alt,shift": fullScreenTopRightOperation,
-  "a:alt,shift": fullScreenLeftOperation,
-  "s:alt,shift": fullScreenOperation,
-  "d:alt,shift": fullScreenRightOperation,
-  "z:alt,shift": fullScreenBottomLeftOperation,
-  "x:alt,shift": fullScreenBottomOperation,
-  "c:alt,shift": fullScreenBottomRightOperation,
-
-  "q:alt,cmd,shift": lyricDisplayTopLeftOperation,
-  "w:alt,cmd,shift": lyricDisplayTopOperation,
-  "e:alt,cmd,shift": lyricDisplayTopRightOperation,
-  "a:alt,cmd,shift": lyricDisplayLeftOperation,
-  "s:alt,cmd,shift": lyricDisplayFullScreenOperation,
-  "d:alt,cmd,shift": lyricDisplayRightOperation,
-  "z:alt,cmd,shift": lyricDisplayBottomLeftOperation,
-  "x:alt,cmd,shift": lyricDisplayBottomOperation,
-  "c:alt,cmd,shift": lyricDisplayBottomRightOperation
+  "2:alt,shift": tvbSeatScreenLayoutOperation
 });
