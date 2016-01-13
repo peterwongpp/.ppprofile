@@ -12,7 +12,9 @@ var screens = {
 };
 
 // expects lyric to be put in the left of main screen.
-var lyricOverlay = { // actual lyric: (0, 46, 360, screenSizeY - 46)
+// actual lyric: (0, 46, 360, screenSizeY - 46)
+// values for DesktopLyric: (46, 1146, 0, 0)
+var lyricOverlay = {
   "x": "screenOriginX",
   "y": "screenOriginY",
   "width": 294,
