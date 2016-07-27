@@ -190,15 +190,7 @@ var tvbSeatScreenBottomRightOperation = slate.operation("move", {
 var appConfigurations = {
   "Terminal": {
     "common": {
-      "operations": [
-        slate.operation("move", {
-          "x": "screenOriginX + screenSizeX / 2",
-          "y": "screenOriginY",
-          "width": "screenSizeX / 2",
-          "height": "screenSizeY / 2",
-          "screen": screens["mainScreen"]
-        })
-      ],
+      "operations": [mainScreenOperation],
       "repeat": true
     }
   },
@@ -210,8 +202,13 @@ var appConfigurations = {
   },
   "Safari": {
     "common": {
-      "operations": [mainScreenOperation],
       "repeat": true
+    },
+    "mainScreen": {
+      "operations": [mainScreenOperation]
+    },
+    "tvbSeatScreen": {
+      "operations": [tvbSeatScreenOperation]
     }
   },
   "Sublime Text": {
