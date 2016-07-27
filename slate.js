@@ -262,6 +262,9 @@ var appConfigurations = {
     }
   },
   "Mail": {
+    "common": {
+      "repeat": true
+    },
     "mainScreen": {
       "operations": [mainScreenOperation]
     },
