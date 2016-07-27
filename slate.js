@@ -5,7 +5,7 @@ slate.configAll({
 });
 
 var mainScreen    = "1440x900";
-var tvbSeatScreen = "1680x1050";
+var tvbSeatScreen = "1920x1080";
 var screens = {
   "mainScreen": mainScreen,
   "tvbSeatScreen": tvbSeatScreen
