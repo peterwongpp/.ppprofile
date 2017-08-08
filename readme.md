@@ -15,3 +15,13 @@ How do you use it is your problem. Here is how I use it ;)
     - `ln -s .profile .bashrc`
     - `ln -s .profile .bash_profile`
     - ...
+
+---
+
+## Other Notes
+
+### Config git to show unicode filenames
+
+`git config --global core.quotePath false`
+
+https://stackoverflow.com/a/34549249
